@@ -18,27 +18,27 @@ function App() {
         <Route path="/login">
           <UserLogin />
         </Route>
-        <AuthRoute path="/admin" exact>
-          <AdminMovies />
-        </AuthRoute>
+        <Route path="/admin/login" exact>
+          <AdminLogin />
+        </Route>
         <AuthRoute path="/admin/add" exact>
           <AddTheatre />
         </AuthRoute>
         <AuthRoute path="/admin/:id" exact>
           <AdminTheatre />
         </AuthRoute>
-        <Route path="/admin/login" exact>
-          <AdminLogin />
-        </Route>
-        <AuthRoute exact path ="/">
-          <Movies />
-        </AuthRoute>   
+        <AuthRoute path="/admin" exact>
+          <AdminMovies />
+        </AuthRoute>
         <AuthRoute exact path="/movie/:id">
           <Theators />
         </AuthRoute> 
         <AuthRoute exact path="/movie/:id/seating">
           <Seating />
         </AuthRoute>
+        <AuthRoute exact path ="/">
+          <Movies />
+        </AuthRoute>   
       </Switch>
     </div>
   );
