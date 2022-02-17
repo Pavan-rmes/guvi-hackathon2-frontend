@@ -3,24 +3,37 @@ import { useParams,useHistory } from "react-router-dom"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { API } from "../utility"
+import { Loader } from "./Spinner"
 
 
 export function Theators(){
+    const history = useHistory()
     const [movie,setMovie] = useState([])
     const {id} = useParams()
     useEffect(()=>{
         axios.get(`${API}/movies/${id}`)
         .then((data)=>setMovie(data.data))
     },[])
-    console.log(movie)
-    return(
-        <div >
-            <h1 style={{color:"white"}} className="moviename bg-gray-500 p-10">{movie?.moviename}</h1>
-            <div style={{boxShadow:"0 2px 4px 0 rgba(0,0,0,0.2)",backgroundColor:"white"}} className="flex-column my-10 md:mx-40 p-2 md:p-10">
-                {movie?.theater?.map((th,index)=>(<Theator key={index} id={id} theatorname={th.name} timings={th.timings} />))}
+    if(movie.moviename){
+        return(
+            <div >
+                <h1 style={{color:"white"}} className="moviename bg-gray-500 p-10">{movie?.moviename}</h1>
+                <button 
+                onClick={()=>history.push("/")}
+                className="mt-5 md:ml-5 text-3xl border border-blue-500 rounded-full px-2 bg-blue-500 text-white "> &lt; </button>
+                <div style={{boxShadow:"0 2px 4px 0 rgba(0,0,0,0.2)",backgroundColor:"white"}} className="flex-column my-10 md:mx-40 p-2 md:p-10">
+                    {movie?.theater?.map((th,index)=>(<Theator key={index} id={id} theatorname={th.name} timings={th.timings} />))}
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
+    else{
+        return(
+            <div className="flex justify-center mt-20">
+                <Loader />
+            </div>
+        )
+    }
 }
 
 function Theator({theatorname,timings,id}){

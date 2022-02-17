@@ -1,8 +1,9 @@
 import { useState,useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useParams,useHistory } from "react-router-dom"
 import { useLocation } from "react-router-dom"
 import axios from "axios"
 import { API } from "../utility"
+import { Loader } from "./Spinner"
 
 
 export function Seating(){
@@ -10,6 +11,7 @@ export function Seating(){
     const [theatreData,setTheatreData] = useState([])
     const {id} = useParams()
     const location = useLocation()
+    const history = useHistory()
     console.log(location.state)
     // let data =[]
     useEffect(()=>{
@@ -21,18 +23,31 @@ export function Seating(){
         // .the((theaterdata)=>setData(theaterdata[0]?.timings?.filter((time)=>time?.time === location.state.time)[0].seating))
     },[])
 
-    console.log(data)
     data[0]?.seating?.sort((a,b)=> (a.row.charCodeAt(0) - b.row.charCodeAt(0)))
     
-    return(
-        <div className=" ml-4 mr-4 mt-48 md:ml-96 md:mt-20">
-            <div className="ml-64 mb-10">Screen</div>
-            {data[0]?.seating.map((row,index)=>(<SeatRows location={location} movieId = {id} theatreData={theatreData} key={index} rowid ={index} row={row} />))}
-            <div className="ml-96 mt-20">
-                <button className="bg-green-500 text-white p-2 rounded">checkout</button>
+    if(data.length>0){
+        return(
+            <div>
+                <button 
+                onClick={()=>history.goBack()}
+                className="mt-5 md:ml-5 text-3xl border border-blue-500 rounded-full px-2 bg-blue-500 text-white "> &lt; </button>
+                <div className=" ml-4 mr-4 mt-48 md:ml-96 md:mt-20">
+                    <div className="ml-64 mb-10">Screen</div>
+                    {data[0]?.seating.map((row,index)=>(<SeatRows location={location} movieId = {id} theatreData={theatreData} key={index} rowid ={index} row={row} />))}
+                    <div className="ml-96 mt-20">
+                        <button className="bg-green-500 text-white p-2 rounded">checkout</button>
+                    </div>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
+    else{
+        return(
+            <div className="flex justify-center mt-20">
+                <Loader />
+            </div>
+        )
+    }
 }
 
 function SeatRows({rowid,row,data,movieId,theatreData,location}){
